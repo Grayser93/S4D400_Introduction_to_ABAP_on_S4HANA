@@ -1,0 +1,27 @@
+**Step 1: Create Hello World
+WRITE : 'hello world'.
+
+**Step 2: Create variables
+*data : x type i,
+*       y type i,
+*       z type i.
+*
+*x = 10.
+*y = 20.
+*z = x + y.
+*
+*WRITE : z.
+
+**Step 3: Get value from parameter
+*PARAMETERS : x type i,
+*             y type i.
+*
+*data z type i.
+*
+*z = x + y.
+*
+*WRITE : z.
+*
+**Step 4: format output
+*
+*WRITE : z COLOR COL_GROUP.
