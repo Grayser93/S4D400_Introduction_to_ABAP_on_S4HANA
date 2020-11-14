@@ -1,0 +1,47 @@
+
+* An Example of the Use of the WHILE Statement
+
+data x type i VALUE 29.
+data offset TYPE i.
+data str type c LENGTH 100 value 'this is a simple text with value anubhav trainings'.
+data newval type c length 30.
+
+WHILE x > 20.
+    offset = sy-index.
+    WRITE : / str+0(offset).
+    x = x - 1.
+endwhile.
+
+
+*An Example of the Use of the CONTINUE Statement
+
+
+* parameters p(20) default 'c::\\\xxx\\yyy'.
+* data: c,                    "current character
+*       n.                    "next    character
+*
+* do 19 times varying c from p+0 next p+1
+*             varying n from p+1 next p+2.
+*     if c na ':\'.
+*         continue.
+*        endif.
+*    if c = n.
+*        write: / 'duplicate', c, 'found', 'at position', sy-index.
+*        endif.
+*    enddo.
+
+
+*Was Re-coded to Use the CHECK Statement Instead of CONTINUE
+
+
+* parameters p(20) default 'c::\\\xxx\\yyy'.
+* data: c,                    "current character
+*       n.                    "next    character
+*
+* do 19 times varying c from p+0 next p+1
+*             varying n from p+1 next p+2.
+*     check c ca ':\'.
+*     if c = n.
+*        write: / 'duplicate', c, 'found', 'at position', sy-index.
+*        endif.
+*    enddo.

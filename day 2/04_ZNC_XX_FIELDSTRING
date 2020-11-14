@@ -1,0 +1,112 @@
+*&---------------------------------------------------------------------*
+*& Report zs4d_00_fieldstring
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT zs4d_00_fieldstring.
+
+*A Simple Example of a Field String Defined Using the DATA Statement
+
+
+ data: begin of totals_1,
+         region(7)    value 'unknown',
+         debits(15)   type p,
+         count        type i,
+         end of totals_1,
+       totals_2 like totals_1.
+
+ totals_1-debits = 100.
+ totals_1-count  = 10.
+ totals_2-debits = 200.
+
+ write: / totals_1-region, totals_1-debits, totals_1-count,
+        / totals_2-region, totals_2-debits, totals_2-count.
+
+
+*A Field String Can Contain Another Field String
+
+
+* data: begin of names,
+*         name1        like kna1-name1,
+*         name2        like kna1-name2,
+*         end of names.
+* data: begin of cust_info,
+*         number(10)   type n,
+*         nm           like names,         "like a field string
+*         end of cust_info.
+*
+* cust_info-number   = 15.
+* cust_info-nm-name1 = 'Jack'.
+* cust_info-nm-name2 = 'Gordon'.
+*
+* write: / cust_info-number,
+*          cust_info-nm-name1,
+*          cust_info-nm-name2.
+
+
+*A Field String Can Be Defined Exactly Like a DDIC Table or Structure
+
+
+* data: my_lfa1 like lfa1,         "like a table in the DDIC
+*       my_addr like addr.         "like a structure in the DDIC
+*
+* my_lfa1-name1 = 'Andrea Miller'.
+* my_lfa1-telf1 = '1-243-2746'.
+* my_addr-land1 = 'CA'.
+*
+* write: / my_lfa1-name1,
+*          my_lfa1-name2,
+*          my_addr-land1.
+
+*DDIC Tables and Structures Can also be Included in a Field String
+
+
+* data    begin of fs1.
+* include   structure lfa1.
+* data:     extra_field(3) type c,
+*           end of fs1.
+*
+* fs1-lifnr       = 12.
+* fs1-extra_field = 'xyz'.
+*
+* write: / fs1-lifnr,
+*          fs1-extra_field.
+
+
+*If You Use LIKE Instead of INCLUDE, You Get a Different Result. The Names of the Included Fields Are Prefixed by an Intermediate Component Name.
+
+
+* data: begin of fs1,
+*         mylfa1 like lfa1,
+*         extra_field(3) type c,
+*         end of fs1.
+*
+* fs1-mylfa1-lifnr  = 12.
+* fs1-extra_field    = 'xyz'.
+*
+* write: / fs1-mylfa1-lifnr,
+*          fs1-extra_field.
+
+*An Example of Assignment Involving Two Field Strings
+
+
+* data: begin of fs1,
+*         c1 value 'A',
+*         c2 value 'B',
+*         c3 value 'C',
+*         end of fs1,
+*       fs2 like fs1.
+*
+* fs2 = fs1.
+* write: / fs2-c1, fs2-c2, fs2-c3.
+
+
+*Simple Example of a Field String Defined Using the TABLES Statement
+
+
+* tables lfa1.
+*
+* lfa1-name1 = 'Bugsy'.
+* lfa1-land1 = 'US'.
+*
+* write: / lfa1-name1, lfa1-land1.

@@ -1,0 +1,73 @@
+
+*Simple Example of a User-Defined Data Type CHAR2
+
+types char2(2) type c.
+data: v1 type char2 value 'AB',
+     v2 type char2 value 'CD'.
+
+write: v1, v2.
+
+*Using Types Can Make Your Code Clearer and Easier to Read
+
+*types: dollars(16) type p decimals 2,
+*       lira(16)    type p decimals 0.     "italian lira have no decimals
+*
+*data: begin of american_sums,
+*           petty_cash type dollars,
+*           pay_outs   type dollars,
+*           lump_sums  type dollars,
+*           end of american_sums,
+*      begin of italian_sums,
+*          petty_cash  type lira,
+*          pay_outs    type lira,
+*          lump_sums   type lira,
+*          end of italian_sums.
+*
+*american_sums-pay_outs = '9500.03'.       "need quotes when literal
+*italian_sums-lump_sums = 5141.
+*
+*write: / american_sums-pay_outs,
+*      / italian_sums-lump_sums.
+
+
+*Using Structured Types can Reduce Redundancy and Make Maintenance Easier
+
+
+* types: begin of address,
+*            street(25),
+*            city(20),
+*            region(7),
+*            country(15),
+*            postal_code(9),
+*            end of address.
+*
+*data: customer_addr type address,
+*      vendor_addr   type address,
+*      employee_addr type address,
+*      shipto_addr   type address.
+*
+*customer_addr-street  = '101 Memory Lane'.
+*employee_addr-country = 'Transylvania'.
+*
+*write: / customer_addr-street,
+*        employee_addr-country.
+
+
+*An Example type-pool Statement Containing Types and Constants
+*Create in SE11
+
+*Using Type Group Reduces Duplication of Code for Easier Maintenance
+
+*    type-pools ztx1.
+*    data: begin of american_sums,
+*              petty_cash type ztx1_dollars,
+*              pay_outs   type ztx1_dollars,
+*              lump_sums  type ztx1_dollars,
+*              end of american_sums.
+*
+*    american_sums-pay_outs = '9500.03'.
+*
+*    if american_sums-pay_outs > ztx1_warning_threshold.
+*        write: / 'Warning', american_sums-pay_outs,
+*                 'exceeds threshold', ztx1_warning_threshold.
+*    endif.

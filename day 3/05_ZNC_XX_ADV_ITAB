@@ -1,0 +1,65 @@
+
+types : begin of ty_team,
+            team type c LENGTH 40,
+            captain type c LENGTH 85,
+        END OF ty_team.
+
+types : begin of ty_team2,
+            scrum type c LENGTH 40,
+            lead type c LENGTH 85,
+            score type i,
+        END OF ty_team2.
+
+data: lt_team type TABLE of ty_team,
+      lt_team2 type TABLE of ty_team2,
+      ls_team type ty_team.
+
+ls_team-team = 'Barcelona'.
+ls_team-captain = 'Lionel Messi'.
+append ls_team to lt_team.
+
+ls_team-team = 'Portugal'.
+ls_team-captain = 'Oliveira'.
+append ls_team to lt_team.
+
+ls_team-team = 'Real Madrid'.
+ls_team-captain = 'Cristiano Ronaldo'.
+append ls_team to lt_team.
+
+*Value Expression to load table
+lt_team = value #( ( team = 'Barcelona' captain = 'Lionel Messi' )
+                   ( team = 'Portugal' captain = 'Oliveira' )
+                   ( team = 'Real Madrid' captain = 'Cristiano Ronaldo' ) ).
+
+*Move Data from one table to another table
+lt_team2 = CORRESPONDING #( lt_team MAPPING
+                                    scrum = team
+                                    lead = captain
+                                     ).
+
+*Check if table line exist
+if line_exists( lt_team[ team = 'Barcelona' ] ).
+ls_team = lt_team[ team = 'Barcelona' ].
+if ( sy-subrc = 0 ).
+   WRITE : / 'found team ', ls_team-team, ls_team-captain.
+endif.
+endif.
+
+read table lt_team into ls_team with key team = 'Portugal'.
+if ( sy-subrc = 0 ).
+   WRITE : / 'found team ', ls_team-team, ls_team-captain.
+endif.
+
+*Inline data declaration
+loop at lt_team2 into data(ls_team2).
+    write: / ls_team2-scrum, ls_team2-lead, ls_team2-score.
+endloop.
+
+*Field Symbols
+loop at lt_team2 ASSIGNING FIELD-SYMBOL(<fs>).
+    <fs>-score = 95.
+endloop.
+
+loop at lt_team2 into ls_team2.
+    write: / ls_team2-scrum, ls_team2-lead, ls_team2-score.
+endloop.

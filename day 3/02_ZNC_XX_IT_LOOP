@@ -1,0 +1,58 @@
+
+**This Program Adds 3 Rows to Internal Table itab from the Header Line, and Then Writes Them Back out Again
+
+
+data: begin of itab occurs 3,
+          f1(1),
+          f2(2),
+          end of itab.
+itab-f1 = 'A'.
+itab-f2 = 'XX'.
+append itab to itab.    "appends header line itab to body itab
+itab-f1 = 'B'.
+itab-f2 = 'YY'.
+append itab.          "same as line 8
+itab-f1 = 'C'.
+append itab.          "the internal table now contains three rows.
+sy-tabix = sy-subrc = 99.
+loop at itab.         "same as: loop at itab into itab
+    write: / sy-tabix, itab-f1, itab-f2.
+    endloop.
+write: / 'done. sy-tabix =', sy-tabix,
+       / '      sy-subrc =', sy-subrc.
+
+
+**Same program but Only Some of the Rows Are Read
+
+
+*data: begin of itab occurs 3,
+*          f1(1),
+*          f2(2),
+*          end of itab.
+*itab-f1 = 'A'.
+*itab-f2 = 'XX'.
+*append itab.
+*itab-f1 = 'B'.
+*itab-f2 = 'YY'.
+*append itab.
+*itab-f1 = 'C'.
+*append itab.                  "itab now contains three rows
+*
+*loop at itab where f2 = 'YY'. "f2 is right, itab-f2 would be wrong here
+*    write: / sy-tabix, itab-f1, itab-f2.
+*    endloop.
+*skip.
+*
+*loop at itab to 2.            "same as: loop at itab from 1 to 2.
+*    write: / sy-tabix, itab-f1, itab-f2.
+*    endloop.
+*skip.
+*
+*loop at itab from 2.          "same as: loop at itab from 2 to 3.
+*    write: / sy-tabix, itab-f1, itab-f2.
+*    endloop.
+*skip.
+*
+*loop at itab from 2 where f1 = 'C'.
+*    write: / sy-tabix, itab-f1, itab-f2.
+*    endloop.

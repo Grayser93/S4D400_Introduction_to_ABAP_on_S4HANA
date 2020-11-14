@@ -1,0 +1,129 @@
+
+*An Example of Using IF in the Program
+
+ data: begin of s1,
+           x value 'X',
+           y value 'Y',
+           z value 'Z',
+           end of s1,
+       begin of s2,
+           x value 'X',
+           z value 'Z',
+          end of s2.
+
+if s1-x = s2-x.
+    write: / s1-x, '=', s2-x.
+else.
+    write: / s1-x, '<>', s2-x.
+    endif.
+
+if s1-x between s2-x and s2-z.
+    write: / s1-X, 'is between', s2-x, 'and', s2-z.
+else.
+    write: / s1-X, 'is not between', s2-x, 'and', s2-z.
+    endif.
+
+if s1 = s2.        "comparing field strings byte by byte
+    write: / 's1 = s2'.
+else.
+    write: / 's1 <> s2'.
+    endif.
+
+if 0 = ' '.        "Watch out for this one
+    write: / '0 = '' '''.
+else.
+    write: / '0 <> '' '''.
+    endif.
+
+
+*Using ELSEIF Is Clearer than Using Nested IFs
+
+ parameters: f1 default 'A',
+             f2 default 'B',
+             f3 default 'C'.
+
+ if      f1 = f2.   write: / f1, '=', f2.
+ elseif  f1 = f3.   write: / f1, '=', f3.
+ elseif  f2 = f3.   write: / f2, '=', f3.
+ else.              write: / 'all fields are different'.
+    endif.
+
+*lines 5-9 do the same as lines 14-26
+
+if f1 = f2.
+    write: / f1, '=', f2.
+else.
+    if  f1 = f3.
+        write: / f1, '=', f3.
+    else.
+        if  f2 = f3.
+            write: / f2, '=', f3.
+        else.
+            write: / 'all fields are different'.
+            endif.
+        endif.
+    endif.
+
+
+*A Sample Program Exercising CO, CN, CA, and NA
+
+* operator: co
+ write / '''AABB'' co ''AB'''.
+ if 'AABB' co 'AB'.           write 'True'. else. write 'False'. endif.
+ write / '''ABCD'' co ''ABC'''.
+ if 'ABCD' co 'ABC'.          write 'True'. else. write 'False'. endif.
+
+* operator: cn
+ write / '''AABB'' cn ''AB'''.
+if 'AABB' cn 'AB'.           write 'True'. else. write 'False'. endif.
+write / '''ABCD'' cn ''ABC'''.
+if 'ABCD' cn 'ABC'.          write 'True'. else. write 'False'. endif.
+
+* operator: ca
+write / '''AXCZ'' ca ''AB'''.
+if 'AXCZ' ca 'AB'.           write 'True'. else. write 'False'. endif.
+write / '''ABCD'' ca ''XYZ'''.
+if 'ABCD' ca 'XYZ'.          write 'True'. else. write 'False'. endif.
+
+* operator: na
+write / '''AXCZ'' na ''ABC'''.
+if 'AXCZ' na 'ABC'.          write 'True'. else. write 'False'. endif.
+write / '''ABCD'' na ''XYZ'''.
+if 'ABCD' na 'XYZ'.          write 'True'. else. write 'False'. endif.
+
+
+*Using SY-FDPOS to See the Offset of the First Matching or Non-matching Character
+
+* operator: co
+ write / '''AABB'' co ''AB'''.
+ if 'AABB' co 'AB'.           write 'True'. else. write 'False'. endif.
+                              write: 'sy-fdpos=', sy-fdpos.
+ write / '''ABCD'' co ''ABC'''.
+ if 'ABCD' co 'ABC'.          write 'True'. else. write 'False'. endif.
+                              write: 'sy-fdpos=', sy-fdpos.
+
+* operator: cn
+write / '''AABB'' cn ''AB'''.
+if 'AABB' cn 'AB'.           write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.
+write / '''ABCD'' cn ''ABC'''.
+if 'ABCD' cn 'ABC'.          write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.
+
+* operator: ca
+write / '''AXCZ'' ca ''AB'''.
+if 'AXCZ' ca 'AB'.           write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.
+
+write / '''ABCD'' ca ''XYZ'''.
+if 'ABCD' ca 'XYZ'.          write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.
+
+* operator: na
+write / '''AXCZ'' na ''ABC'''.
+if 'AXCZ' na 'ABC'.          write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.
+
+write / '''ABCD'' na ''XYZ'''.
+if 'ABCD' na 'XYZ'.          write 'True'. else. write 'False'. endif.
+                             write: 'sy-fdpos=', sy-fdpos.

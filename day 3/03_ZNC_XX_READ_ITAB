@@ -1,0 +1,168 @@
+
+**The index Addition on the read table Statement Locates a Single Row by Its Relative Row Number
+
+
+data: begin of itab occurs 3,
+          f1(2) type n,
+          f2    type i,
+          f3(2) type c,
+          f4    type p,
+          end of itab,
+      wa like itab.
+
+itab-f1 = '10'. itab-f3 = 'AA'. itab-f2 = itab-f4 = 1. append itab.
+itab-f1 = '20'. itab-f3 = 'BB'. itab-f2 = itab-f4 = 2. append itab.
+itab-f1 = '30'. itab-f3 = 'CC'. itab-f2 = itab-f4 = 3. append itab.
+
+read table itab index 2.
+write: / 'sy-subrc =', sy-subrc,
+       / 'sy-tabix =', sy-tabix,
+       / itab-f1, itab-f2, itab-f3, itab-f4.
+
+read table itab into wa index 1.
+write: /,
+       / 'sy-subrc =', sy-subrc,
+       / 'sy-tabix =', sy-tabix,
+       / itab-f1, itab-f2, itab-f3, itab-f4,
+       / wa-f1, wa-f2, wa-f3, wa-f4.
+
+read table itab index 4.
+write: /,
+       / 'sy-subrc =', sy-subrc,
+       / 'sy-tabix =', sy-tabix,
+       / itab-f1, itab-f2, itab-f3, itab-f4,
+       / wa-f1, wa-f2, wa-f3, wa-f4.
+
+
+*Using a Key Expression, You Can Search for a Row by Specifying a Value Instead of an Index
+
+
+*data: begin of itab occurs 3,
+*          f1(2) type n,
+*          f2    type i,
+*          f3(2) type c,
+*          f4    type p,
+*          end of itab,
+*      begin of w1,
+*          f1 like itab-f1,
+*          f2 like itab-f2,
+*          end of w1,
+*      w2 like itab,
+*      f(8).
+*
+*itab-f1 = '10'. itab-f3 = 'AA'. itab-f2 = itab-f4 = 1. append itab.
+*itab-f1 = '20'. itab-f3 = 'BB'. itab-f2 = itab-f4 = 2. append itab.
+*itab-f1 = '30'. itab-f3 = 'CC'. itab-f2 = itab-f4 = 3. append itab.
+*
+*read table itab with key f1 = '30' f2 = 3.
+*write: / 'sy-subrc =', sy-subrc,
+*       / 'sy-tabix =', sy-tabix,
+*       / itab-f1, itab-f2, itab-f3, itab-f4.
+*
+*f = 'F2'.                                 "must be in uppercase
+*read table itab into w2 with key (f) = 2.
+*write: /,
+*       / 'sy-subrc =', sy-subrc,
+*       / 'sy-tabix =', sy-tabix,
+*       / itab-f1, itab-f2, itab-f3, itab-f4,
+*       / w2-f1, w2-f2, w2-f3, w2-f4.
+*
+*clear w2.
+*w2-f1 = '10'. w2-f3 = 'AA'. w2-f2 = w2-f4 = 1.
+*read table itab with key = w2.
+*write: /,
+*       / 'sy-subrc =', sy-subrc,
+*       / 'sy-tabix =', sy-tabix,
+*       / itab-f1, itab-f2, itab-f3, itab-f4.
+*
+*w1-f1 = '20'. w1-f2 = 2.
+*read table itab into w2 with key w1.
+*write: /,
+*       / 'sy-subrc =', sy-subrc,
+*       / 'sy-tabix =', sy-tabix,
+*       / itab-f1, itab-f2, itab-f3, itab-f4.
+
+
+*The Most Efficient Way to Insert Rows into a Sorted Internal Table While Maintaining the Sort Order.
+
+*data: begin of itab occurs 3,
+*          f1(2) type n,
+*          f2    type i,
+*          f3(2) type c,
+*          f4    type p,
+*          end of itab.
+*
+*itab-f1 = '40'. itab-f3 = 'DD'. itab-f2 = itab-f4 = 4. append itab.
+*itab-f1 = '20'. itab-f3 = 'BB'. itab-f2 = itab-f4 = 2. append itab.
+*
+*sort itab by f1.
+*do 5 times.
+*    itab-f1 = sy-index * 10.
+*    itab-f3 = 'XX'.
+*    itab-f2 = itab-f4 = sy-index.
+*    read table itab
+*        with key f1 = itab-f1
+*        binary search
+*        transporting no fields.
+*    if sy-subrc <> 0.
+*        insert itab index sy-tabix.
+*        endif.
+*    enddo.
+*
+*loop at itab.
+*    write: / itab-f1, itab-f2, itab-f3, itab-f4.
+*    endloop.
+
+
+*Use the sort Statement to Reorder the Rows of an Internal Table
+
+
+*data: begin of itab occurs 5,
+*          i like  sy-index,
+*          t ,
+*          end of itab,
+*      alpha type c length 5 value 'CBABB',
+*      no type i.
+*
+*do 5 times.
+*    no = sy-index - 1. ""offset starts with 0
+*    itab-t = alpha+no(1).
+*    itab-i = sy-index.
+*    append itab.
+*enddo.
+*
+*loop at itab.
+*    write: / itab-i, itab-t.
+*    endloop.
+*
+*skip.
+*sort itab by t.
+*loop at itab.
+*    write: / itab-i, itab-t.
+*    endloop.
+*
+*skip.
+*sort itab by t.
+*loop at itab.
+*    write: / itab-i, itab-t.
+*    endloop.
+*
+*skip.
+*sort itab by t i.
+*loop at itab.
+*    write: / itab-i, itab-t.
+*    endloop.
+*
+*skip.
+*sort itab by t descending i.
+**same as: sort itab descending by t i ascending.
+*loop at itab.
+*    write: / itab-i, itab-t.
+*    endloop.
+*
+*skip.
+*sort itab.
+**same as: sort itab by t.
+*loop at itab.
+*    write: / itab-t.
+*endloop.

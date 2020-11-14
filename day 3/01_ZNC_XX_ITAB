@@ -1,0 +1,67 @@
+
+data: begin of it1 occurs 10,          "has a header line
+        f1,
+        f2,
+        f3,
+        end of it1.
+
+data it2 like znc_xx_bpa occurs 100.      "doesn't have a header line
+
+data it3 like znc_xx_bpa occurs 100 with header line. "it does now
+
+
+*These Definitions Create Internal Tables with and Without a Header Line
+
+*data: begin of it1 occurs 10,          "has a header line
+*        f1,
+*        f2,
+*        f3,
+*        end of it1.
+*
+*data it2 like znc_xx_bpa occurs 100.      "doesn't have a header line
+*
+*data it3 like znc_xx_bpa occurs 100 with header line. "it does now
+*
+*data it4 like it3 occurs 100.          "doesn't have a header line
+*
+*data     begin of it5 occurs 100.      "has a header line
+*include      structure znc_xx_bpa.
+*data         end of it5.
+*
+*data     begin of it6 occurs 100.      "this is why you might use
+*include      structure znc_xx_bpa.        "the include statement
+*data:        delflag,
+*             rowtotal,
+*             end of it6.
+*
+*data: begin of it7 occurs 100,         "don't do it this way
+*          s like znc_xx_bpa,              "component names will be
+*          end of it7.                  "prefixed with it7-s-
+*
+*data it8 like sy-index occurs 10
+*    with header line.
+*
+*data: begin of it9 occurs 10,
+*          f1 like sy-index,
+*          end of it9.
+
+
+
+*Adding Data to an Internal Table Using the append Statement
+
+
+*data: begin of it occurs 3,
+*          f1(1),
+*          f2(2),
+*          end of it.
+*it-f1 = 'A'.
+*it-f2 = 'XX'.
+*append it to it.    "appends header line IT to body IT
+*write: / 'sy-tabix =', sy-tabix.
+*it-f1 = 'B'.
+*it-f2 = 'YY'.
+*append it.          "same as line 8
+*write: / 'sy-tabix =', sy-tabix.
+*it-f1 = 'C'.
+*append it.          "the internal table now contains three rows.
+*write: / 'sy-tabix =', sy-tabix.

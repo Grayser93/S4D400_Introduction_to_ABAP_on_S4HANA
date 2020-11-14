@@ -1,0 +1,271 @@
+
+*The describe table Statement Uses System Variables to Quantify Table Contents
+
+ data: begin of itab occurs 3,
+           f1 value 'X',
+           end of itab,
+       n type i.
+
+ if itab[] is initial.
+     write: / 'itab is empty'.
+     endif.
+
+append: itab, itab, itab.     "same as writing 'append itab' 3 times.
+
+if not itab[] is initial.
+    write: / 'itab is not empty'.
+    endif.
+
+write: / 'number of  rows from sy-tabix:', sy-tabix.
+describe table itab lines n.
+write: / 'number of  rows from sy-tfill:', sy-tfill,
+       / 'length of a row from sy-tleng:', sy-tleng,
+       / 'occurs value    from sy-toccu:', sy-toccu.
+
+*This Program Copies the Data from One Internal Table to Another Using the append lines and insert lines Statements
+
+* data: begin of itab occurs 10,
+*           f1,
+*           end of itab,
+*       it2 like itab occurs 10 with header line,
+*       alpha(10) value 'ABCDEFGHIJ',
+*       no type i.
+*
+*do 10 times.
+*    no = sy-index - 1. ""offset starts with 0
+*    itab-f1 = alpha+no(1).
+*    append itab.
+*enddo.
+*
+*append lines of itab from 2 to 5 to it2.
+*loop at it2.
+*    write it2-f1.
+*    endloop.
+*
+*insert lines of itab from 8 into it2 index 2.
+*skip.
+*loop at it2.
+*    write it2-f1.
+*    endloop.
+*
+*loop at it2.
+*    if it2-f1 >= 'E'.
+*        insert lines of itab to 1 into it2.
+*        endif.
+*    endloop.
+*
+*skip.
+*loop at it2.
+*    write it2-f1.
+*    endloop.
+*
+*skip.
+*it2[] = itab[].
+*loop at it2.
+*    write it2-f1.
+*    endloop.
+
+*Use the insert Statement to Insert a Single Row into an Internal Table
+
+
+* data: begin of itab occurs 5,
+*           f1 like sy-index,
+*           end of itab.
+*
+* do 5 times.
+*     itab-f1 = sy-index.
+*     append itab.
+*     enddo.
+*
+*itab-f1 = -99.
+*insert itab index 3.
+*
+*loop at itab.
+*    write / itab-f1.
+*    endloop.
+*
+*loop at itab where f1 >= 4.
+*    itab-f1 = -88.
+*    insert itab.
+*    endloop.
+*
+*skip.
+*loop at itab.
+*    write / itab-f1.
+*    endloop.
+
+*Use modify to Overwrite the Existing Contents of One or More Rows of an Internal Table
+
+
+* data: begin of itab occurs 5,
+*           f1 like sy-index,
+*           f2,
+*           end of itab,
+*       alpha(5) value 'ABCDE',
+*       no type i.
+*
+*do 5 times.
+*    no = sy-index - 1. ""offset starts with 0
+*    itab-f2 = alpha+no(1).
+*    itab-f1 = sy-index.
+*    append itab.
+*enddo.
+*
+*itab-f2 = 'Z'.
+*modify itab index 4.
+*
+*loop at itab.
+*    write: / itab-f1, itab-f2.
+*    endloop.
+*
+*loop at itab.
+*    itab-f1 = itab-f1 * 2.
+*    modify itab.
+*    endloop.
+*
+*skip.
+*loop at itab.
+*    write: / itab-f1, itab-f2.
+*    endloop.
+*
+*itab-f2 = 'X'.
+*modify itab transporting f2 where f1 <> 10.
+*
+*skip.
+*loop at itab.
+*    write: / itab-f1, itab-f2.
+*endloop.
+
+
+*The clear Statement Can be Used to Clear the Header Line or Delete the Contents of an Internal Table
+
+
+* data: begin of itab occurs 3,
+*           f1,
+*       end of itab.
+*
+* itab-f1 = 'X'.
+* append: itab, itab.
+*
+* clear itab.         "itab has a header line so clears the header line
+*write: 'f1=', itab-f1.
+*
+*write: / ''.
+*loop at itab.
+*   write itab-f1.
+*   endloop.
+*
+*clear itab[].       "same as: refresh itab.
+*loop at itab.
+*   write itab-f1.
+*   endloop.
+*write: / 'sy-subrc=', sy-subrc.
+
+*Deleting Rows from an Internal Table Can also be Done Using the delete Statement
+
+
+* data: begin of itab occurs 12,
+*           f1,
+*           end of itab,
+*           alpha(12) value 'ABCDEFGHIJKL',
+*           no type i.
+*
+* do 12 times.
+*    no = sy-index - 1. ""offset starts with 0
+*    itab-f1 = alpha+no(1).
+*    append itab.
+*enddo.
+*
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*delete itab index 5.
+*skip.
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*delete itab from 6 to 8.
+*skip.
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*delete itab where f1 between 'B' and 'D'.
+*skip.
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*loop at itab where f1 between 'E' and 'J'.
+*    delete itab.
+*    endloop.
+*
+*skip.
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*read table itab with key f1 = 'K' binary search.
+*write: /, / 'sy-subrc=', sy-subrc, 'sy-tabix=', sy-tabix, / ''.
+*if sy-subrc = 0.
+*    delete itab index sy-tabix.
+*    endif.
+*
+*skip.
+*loop at itab.
+*    write: / sy-tabix, itab-f1.
+*    endloop.
+*
+*free itab.
+
+
+*collect Combines Rows as They Are Added to an Internal Table
+
+
+*DATA: BEGIN OF itab OCCURS 10,
+*        date      TYPE d,                    "    part of default key
+*        tot_sales TYPE p DECIMALS 2,    "not part of default key
+*        name(10),                       "    part of default key
+*        num_sales TYPE i VALUE 1,       "not part of default key
+*      END OF itab.
+*
+*itab-date      = '20200101'.
+*itab-tot_sales  = 100.
+*itab-name       = 'Jack'.
+*COLLECT itab.
+*
+*itab-date       = '20200101'.
+*itab-tot_sales  = 200.
+*itab-name       = 'Jim'.
+*COLLECT itab.
+*
+*itab-date       = '20200101'.
+*itab-tot_sales  = 300.
+*itab-name       = 'Jack'.
+*COLLECT itab.
+*
+*itab-date       = '20200101'.
+*itab-tot_sales  = 400.
+*itab-name       = 'Jack'.
+*COLLECT itab.
+*
+*itab-date       = '20200101'.
+*itab-tot_sales  = 500.
+*itab-name       = 'Jim'.
+*COLLECT itab.
+*
+*itab-date       = '20200101'.
+*itab-tot_sales  = 600.
+*itab-name       = 'Jane'.
+*COLLECT itab.
+*
+*itab-date       = '20200102'.
+*itab-tot_sales  = 700.
+*itab-name       = 'Jack'.
+*COLLECT itab.
+*
+*LOOP AT itab.
+*  WRITE: / itab-date, itab-tot_sales, itab-name, itab-num_sales.
+*ENDLOOP.

@@ -1,0 +1,41 @@
+
+ data f1(2) type c.
+ data f2 like f1.
+ data max_value type i value 100.
+ data cur_date type d value '19980211'.
+
+ WRITE :/ f1, f2, max_value, cur_date.
+
+*Step 2: System variables
+* WRITE :/ sy-uname, sy-datum, sy-uzeit, sy-sysid.
+
+**Step 3 : Simple Parameters
+* parameters p1(2) type c.
+* parameters p2 like p1.
+* parameters max_val type i default 100.
+* parameters cur_date type d default '19980211' obligatory.
+*
+* WRITE :/ p1, p2, max_val, cur_date.
+
+*Step 4: Example Parameters variations
+*parameters: p1(15) type c,
+*              p2  like p1 obligatory lower case,
+*              p3  like sy-datum default sy-datum,
+*              cb1 as checkbox,
+*              cb2 as checkbox,
+*              rb1 radiobutton group g1 default 'X',
+*              rb2 radiobutton group g1,
+*              rb3 radiobutton group g1.
+*
+*write:   / 'You entered:',
+*         / '  p1 =', p1,
+*         / '  p2 =', p2,
+*         / '  p3 =', p3,
+*         / '  cb1=', cb1,
+*         / '  cb2=', cb2,
+*         / '  rb1=', rb1,
+*         / '  rb2=', rb2,
+*         / '  rb3=', rb3.
+
+*Step 5: Text Elements
+*Text Elements in ABAP

@@ -1,0 +1,6 @@
+TYPE-POOL ztx1.
+
+types:    ztx1_dollars(16)         type p decimals 2,
+          ztx1_lira(16)            type p decimals 0.
+constants: ztx1_warning_threshold   type i value 5000,
+          ztx1_amalgamation_date   like sy-datum value '19970305'.
