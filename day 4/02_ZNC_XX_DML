@@ -1,0 +1,43 @@
+
+"Create new record
+data: ls_bp type snwd_bpa,
+      lv_gen_key type guid_32.
+
+select max( bp_id ) into @data(lv_bpid) from snwd_bpa WHERE bp_role = '01'.
+
+ls_bp-bp_id = lv_bpid + 1.
+ls_bp-bp_role = '01'.
+ls_bp-company_name = 'NetCom Learning'.
+ls_bp-approval_status = 'A'.
+ls_bp-created_by = sy-uname.
+GET TIME STAMP FIELD ls_bp-created_at.
+ls_bp-currency_code = 'USD'.
+ls_bp-legal_form = 'USA'.
+ls_bp-web_address = 'anubhavtrainings.com'.
+ls_bp-email_address = 'anubhav.abap@gmail.com'.
+ls_bp-phone_number = '918810504396'.
+call function 'GUID_CREATE'
+  IMPORTING
+    ev_guid_32 = lv_gen_key
+  .
+ls_bp-node_key = lv_gen_key.
+INSERT into snwd_bpa values ls_bp.
+
+
+"Update the record change legal_from to EU
+*select single * from snwd_bpa into @data(ls_record)
+*where company_name = 'NetCom Learning'.
+*
+*update snwd_bpa set legal_form = 'EU'
+*where node_key = ls_record-node_key.
+
+
+"Case Expression
+*select company_name, case bp_role
+*when '01' then 'Customer'
+*when '02' then 'Supplier'
+*end as bp_role from snwd_bpa into table @data(lt_data).
+*
+*loop at lt_data into data(ls_data).
+*    WRITE : / ls_data-company_name, ls_data-bp_role.
+*endloop.

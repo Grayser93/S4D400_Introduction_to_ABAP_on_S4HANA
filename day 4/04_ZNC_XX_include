@@ -1,0 +1,5 @@
+select * from snwd_pd into table itab.
+
+loop at itab into data(wa).
+    WRITE : / wa-product_id, wa-category.
+ENDLOOP.

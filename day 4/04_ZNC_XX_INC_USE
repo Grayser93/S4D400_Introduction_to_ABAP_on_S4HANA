@@ -1,0 +1,3 @@
+data: itab type table of snwd_pd.
+
+include ZNC_XX_include.
