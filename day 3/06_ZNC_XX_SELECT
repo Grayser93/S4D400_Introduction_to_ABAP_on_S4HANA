@@ -1,0 +1,133 @@
+
+* Part 1 : This Program Reads Rows from a Database Table Directly into an Internal Table
+
+
+* tables snwd_ad.
+* data itab like snwd_ad occurs 23 with header line.
+*
+* select * from snwd_ad into table itab.   "don't code an endselect
+* loop at itab.
+*     write: / itab-city, itab-country.
+*     endloop.
+*
+*select * from snwd_ad into table itab
+*    where country between 'DE' and 'US'.
+*skip.
+*loop at itab.
+*    write: / itab-city, itab-country.
+*    endloop.
+*free itab.
+
+
+* Part 2 : What Happens if Table Structures Differ When Using the Select-into Statement
+
+
+* tables znc_xx_bpa.
+* data               begin of itab occurs 2.
+* include structure      znc_xx_bpa.
+* data:                  social_sec_code type p,
+*                        end of itab.
+*
+* select * from snwd_bpa into table itab where company_name = 'SAP'.
+* loop at itab.
+*    write: / itab-bp_id, itab-company_name, itab-email_address, itab-approval_status.
+*    endloop.
+*
+*skip.
+*select bp_id company_name email_address from snwd_bpa into table itab where company_name = 'Tapla'.
+*loop at itab.
+*    write: / itab-bp_id, itab-company_name, itab-email_address.
+*    endloop.
+*free itab.
+
+"Solution to use INTO CORRESPONDING FIELDS OF
+* select * from snwd_bpa into CORRESPONDING FIELDS OF table itab where company_name = 'SAP'.
+* loop at itab.
+*    write: / itab-bp_id, itab-company_name, itab-email_address, itab-approval_status.
+*    endloop.
+*
+*skip.
+
+
+* Part 3 : Your Program Will Produce a Syntax Error If You Try to Put More Fields into an Internal Table than Exist in That Table
+
+
+* tables znc_xx_bpa.
+* data: begin of itab occurs 23,
+*           bp_id like znc_xx_bpa-bp_id,    "this is a char 10 field
+*           company_name like znc_xx_bpa-company_name,    "this is a char  3 field
+*       end of itab.
+*
+**The next line causes a Syntax Error. The internal table is too narrow.
+* select * from snwd_bpa into table itab.
+
+* Part 4 : Using the corresponding fields Additabion to Fill Internal Tables from the Database
+
+
+* tables znc_xx_bpa.
+* data: begin of itab1 occurs 23,
+*           bp_id     like znc_xx_bpa-bp_id,
+*           bp_id_ext like znc_xx_bpa-bp_id,
+*           company_name     like znc_xx_bpa-company_name,
+*           end of itab1,
+*       begin of itab2 occurs 23,
+*           bp_id     like znc_xx_bpa-bp_id,
+*           company_name     like znc_xx_bpa-company_name,
+*       end of itab2.
+*
+*" This is efficient usage:
+*select bp_id company_name from snwd_bpa
+*    into corresponding fields of table itab1
+*    where bp_id between '0100000009' and '0100000029'.
+*loop at itab1.
+*    write: / itab1-bp_id, itab1-company_name.
+*    endloop.
+*
+*" This is inefficient:
+*select * from snwd_bpa
+*    into corresponding fields of table itab2
+*    where bp_id between '0100000009' and '0100000029'.
+*skip.
+*loop at itab1.
+*    write: / itab1-bp_id, itab1-company_name.
+*    endloop.
+*
+*" Instead, write:
+*select bp_id company_name from snwd_bpa into table itab2
+*    where bp_id between '0100000009' and '0100000029'.
+*skip.
+*loop at itab2.
+*    write: / itab2-bp_id, itab2-company_name.
+*endloop.
+*free: itab1, itab2.
+*
+*"Usage of comma allowed only when itab2 is escaped with @
+*select bp_id, company_name from snwd_bpa into table @itab2
+*    where bp_id between '0100000009' and '0100000029'.
+*skip.
+*loop at itab2.
+*    write: / itab2-bp_id, itab2-company_name.
+*endloop.
+*free: itab1, itab2.
+
+
+* Part 5 : Using Inline data declaration to create internal table automatically
+*select company_name, bp_role
+* from snwd_bpa into table @data(itab).
+*
+*loop at itab into data(wa).
+*    write: / wa-company_name, wa-bp_role.
+*endloop.
+
+* Part 6 : Using Select Single Record
+*select single company_name, bp_role
+* from snwd_bpa into  @data(wa) where bp_id = '0100000009'.
+*
+*write: / wa-company_name, wa-bp_role.
+
+
+* Part 7 : Using Select....EndSelect with inline data declaration
+*select company_name, bp_role
+* from snwd_bpa into @data(wa).
+*    write: / wa-company_name, wa-bp_role.
+*endselect.

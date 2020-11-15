@@ -1,0 +1,83 @@
+
+"Standard SQL Functions
+select so_id, gross_amount as actual_amount,
+ceil( gross_amount ) as ceil_gross_amount,
+floor( gross_amount ) as floor_gross_amount
+ from snwd_so into table @data(itab).
+
+loop at itab into data(wa).
+    WRITE : / wa-so_id, wa-actual_amount, wa-ceil_gross_amount, wa-floor_gross_amount.
+endloop.
+
+"Joins
+*Select bpa~company_name, so~so_id, so~gross_amount,
+*       so~currency_code from snwd_so as so inner join
+*       snwd_bpa as bpa on so~buyer_guid = bpa~node_key
+*       into table @data(jtab).
+*
+*loop at jtab into data(wa1).
+*    WRITE : / wa1-company_name, wa1-so_id, wa1-gross_amount, wa1-currency_code.
+*endloop.
+
+"Sub Queries: Read all order belongs to customer SAP
+*Select so~so_id, so~gross_amount,
+*       so~currency_code from snwd_so as so
+*       where so~buyer_guid = ( select node_key from snwd_bpa
+*        where company_name = 'SAP' and bp_role = '01' )
+*       into table @data(lt_orders).
+*
+*loop at lt_orders into data(ls_order).
+*    WRITE : / ls_order-so_id, ls_order-gross_amount, ls_order-currency_code.
+*endloop.
+
+"FOR ALL ENTRIES: Read All orders belongs to USA Customers
+
+*types : BEGIN OF ty_order,
+*            company_name type snwd_bpa-company_name,
+*            so_id type snwd_so-so_id,
+*            gross_amount type snwd_so-gross_amount,
+*            currency_code type snwd_so-currency_code,
+*        end of ty_order.
+*
+*data : lt_orders_all type table of ty_order.
+
+*select bpa~node_key, bpa~company_name, adds~country
+*from snwd_bpa as bpa INNER JOIN snwd_ad as adds on
+*bpa~address_guid = adds~node_key
+*into table @data(lt_bp_usa) where adds~country = 'US'.
+*
+*loop at lt_bp_usa into data(ls_bp_usa).
+*
+*    select so~so_id, so~gross_amount,
+*       so~currency_code from snwd_so as so
+*       where so~buyer_guid = @ls_bp_usa-node_key
+*        APPENDING CORRESPONDING FIELDS OF TABLE @lt_orders_all.
+*
+*endloop.
+*describe table lt_orders_all.
+*WRITE : / sy-tfill.
+*loop at lt_orders_all into data(ls_orders_all).
+*    WRITE : / ls_orders_all-so_id,  ls_orders_all-gross_amount, ls_orders_all-currency_code.
+*endloop.
+
+"Easy way - using FOR ALL ENTRIES
+*select so~so_id, so~gross_amount,
+*       so~currency_code from snwd_so as so
+*       for all entries in @lt_bp_usa
+*       where so~buyer_guid = @lt_bp_usa-node_key
+*        INTO CORRESPONDING FIELDS OF TABLE @lt_orders_all.
+*describe table lt_orders_all.
+*WRITE : / sy-tfill.
+*loop at lt_orders_all into data(ls_orders_all).
+*    WRITE : / ls_orders_all-so_id,  ls_orders_all-gross_amount, ls_orders_all-currency_code.
+*endloop.
+
+*Aggregation Functions
+*Select bpa~company_name, sum( so~gross_amount ) as gross_amount,
+*       so~currency_code from snwd_so as so inner join
+*       snwd_bpa as bpa on so~buyer_guid = bpa~node_key
+*       into table @data(jtab) group by bpa~company_name, so~currency_code.
+*
+*loop at jtab into data(wa1).
+*    WRITE : / wa1-company_name, wa1-gross_amount, wa1-currency_code.
+*endloop.
