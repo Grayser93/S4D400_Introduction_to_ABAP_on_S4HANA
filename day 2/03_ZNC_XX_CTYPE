@@ -6,4 +6,5 @@ constants error_threshold type i value 5.
 constants amalgamation_date like sy-datum value '20200710'.
 constants pie TYPE p DECIMALS 2 VALUE '3.14'.
 
+
 WRITE : c1, c2, error_threshold, amalgamation_date, pie.

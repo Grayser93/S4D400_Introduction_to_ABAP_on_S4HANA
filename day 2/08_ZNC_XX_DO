@@ -37,26 +37,3 @@ do 10 times.
 *         exit.
 *         endif.
 *     enddo.
-
-
-*The Addition VARYING Returns the Components of a Field String in Sequence
-
-* data: f1,
-*       begin of s,
-*           c1 value 'A',
-*           c2 value 'B',
-*           c3 value 'C',
-*           c4 value 'D',
-*           c5 value 'E',
-*           c6 value 'F',
-*          end of s.
-*
-*write / ''.
-*do 6 times varying f1 from s-c1 next s-c2.
-*    write f1.
-*    enddo.
-*
-*write / ''.
-*do 3 times varying f1 from s-c1 next s-c3.
-*    write f1.
-*    enddo.
