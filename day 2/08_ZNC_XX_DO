@@ -1,39 +1,41 @@
-*&---------------------------------------------------------------------*
-*& Report zs4d_00_do
-*&---------------------------------------------------------------------*
-*&
-*&---------------------------------------------------------------------*
-REPORT zs4d_00_do.
 
 *SY-INDEX Contains the Current Iteration Number
-
+ data lv_result type i.
  sy-index = 99.
  write: / 'before  loop, sy-index =', sy-index, / ''.
- do 5 times.
-     write sy-index.
-     enddo.
+ do 10 times.
+     lv_result = sy-index * 2.
+     write / lv_result.
+ enddo.
  write: / 'after   loop, sy-index =', sy-index, / ''.
 
- do 4 times.
+data : lv_outer type i.
+
+do 4 times.
     write: / 'outer   loop, sy-index =', sy-index.
+    lv_outer = sy-index.
     do 3 times.
+        write: / '  outer  =', lv_outer.
         write: / '  inner loop, sy-index =', sy-index.
-        enddo.
     enddo.
+enddo.
 
 write: / ''.                  "new line
 do 10 times.
     write sy-index.
     if sy-index = 3.
         exit.
-        endif.
-    enddo.
+    endif.
+enddo.
 
 *An Endless Loop Can Be Frustrating If You Don't Know How to Break Out
 
-* do.
+*do.
+*     IF sy-index < 5.
+*       CONTINUE.
+*     ENDIF.
 *     write sy-index.
-*     if sy-index = 10.
-*         exit.
-*         endif.
-*     enddo.
+**     if sy-index = 10.
+**         exit.
+**     endif.
+*enddo.
