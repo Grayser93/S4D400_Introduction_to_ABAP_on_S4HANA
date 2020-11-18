@@ -16,19 +16,23 @@ endwhile.
 *An Example of the Use of the CONTINUE Statement
 
 
-* parameters p(20) default 'c::\\\xxx\\yyy'.
-* data: c,                    "current character
-*       n.                    "next    character
-*
-* do 19 times varying c from p+0 next p+1
-*             varying n from p+1 next p+2.
-*     if c na ':\'.
-*         continue.
-*        endif.
-*    if c = n.
-*        write: / 'duplicate', c, 'found', 'at position', sy-index.
-*        endif.
-*    enddo.
+parameters p(20) TYPE C default 'c::\\\xxx\\yyy'.
+data lv_idx type i.
+data: c TYPE C,                    "current character
+      n TYPE C.                    "next    character
+
+do 19 times .
+
+  lv_idx = sy-index - 1.
+  c = p+lv_idx.
+  n = p+sy-index.
+  if c na ':\'.
+    continue.
+  endif.
+  if c = n.
+    write: / 'duplicate', c, 'found', 'at position', sy-index.
+  endif.
+enddo.
 
 
 *Was Re-coded to Use the CHECK Statement Instead of CONTINUE
@@ -38,10 +42,13 @@ endwhile.
 * data: c,                    "current character
 *       n.                    "next    character
 *
-* do 19 times varying c from p+0 next p+1
-*             varying n from p+1 next p+2.
-*     check c ca ':\'.
-*     if c = n.
-*        write: / 'duplicate', c, 'found', 'at position', sy-index.
-*        endif.
-*    enddo.
+*do 19 times .
+*
+*  lv_idx = sy-index - 1.
+*  c = p+lv_idx.
+*  n = p+sy-index.
+*  check c ca ':\'.
+*  if c = n.
+*    write: / 'duplicate', c, 'found', 'at position', sy-index.
+*  endif.
+*enddo.

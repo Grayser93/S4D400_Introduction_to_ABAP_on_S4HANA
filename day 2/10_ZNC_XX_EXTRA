@@ -1,0 +1,18 @@
+data lv_str type string VALUE 'In love with NYC'.
+
+data : lv_result TYPE string,
+       lv_len type i,
+       lv_uc type string,
+       lv_condese type string.
+
+lv_len = strlen( lv_str ).
+
+lv_result = lv_str+13(3).
+
+lv_uc = lv_str.
+TRANSLATE lv_uc to UPPER CASE.
+
+lv_condese = lv_str.
+CONDENSE lv_condese NO-GAPS.
+
+WRITE : lv_result, / lv_len, / lv_uc, / lv_condese.
