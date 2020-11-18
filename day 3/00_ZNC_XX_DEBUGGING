@@ -1,0 +1,26 @@
+
+TYPES : BEGIN OF ty_fin_data,
+          company(20)  type c,
+          gross_amount type i,
+          net_amount   type i,
+          tax_amount   type i,
+        END OF ty_fin_data.
+
+data: fs1 type ty_fin_data,
+      fs2 TYPE ty_fin_data.
+
+fs1-company = 'SAP'.
+fs1-gross_amount = 500.
+fs1-net_amount = 0.
+fs1-tax_amount = 8.
+
+fs2 = fs1.
+
+fs2-company = 'IBM'.
+fs2-gross_amount = 800.
+
+fs1-net_amount = fs1-gross_amount * ( 100 + fs1-tax_amount ) / 100.
+fs2-net_amount = fs2-gross_amount * ( 100 + fs2-tax_amount ) / 100.
+
+WRITE : / fs1-company, fs1-gross_amount, fs1-net_amount, fs1-tax_amount,
+        / fs2-company, fs2-gross_amount, fs2-net_amount, fs2-tax_amount.
