@@ -1,0 +1,13 @@
+
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(I_COUNTRY) TYPE  LAND1
+*"  EXPORTING
+*"     REFERENCE(ET_BPS) TYPE  ZTT_XX_BPA
+*"----------------------------------------------------------------------
+
+select * FROM snwd_bpa inner JOIN snwd_ad
+  on snwd_bpa~address_guid = snwd_ad~node_key
+  into CORRESPONDING FIELDS OF TABLE et_bps
+   where snwd_ad~country = i_country.

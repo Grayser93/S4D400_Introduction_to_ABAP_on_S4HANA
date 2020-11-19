@@ -1,0 +1,25 @@
+FUNCTION znc_xx_create_bp_addr.
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(I_ADDR) TYPE  SNWD_AD
+*"  EXPORTING
+*"     REFERENCE(E_ADDR_ID) TYPE  SNWD_NODE_KEY
+*"----------------------------------------------------------------------
+
+  DATA: ls_addr TYPE snwd_ad,
+        lv_guid TYPE guid_32.
+
+  CALL FUNCTION 'GUID_CREATE'
+    IMPORTING
+      ev_guid_32 = lv_guid.                  " Guid of length 32 (CHAR Format) Uppper Case
+
+  ls_addr-node_key = lv_guid.
+  ls_addr-val_start_date = sy-datum.
+  ls_addr-val_end_date = sy-datum + 90.
+
+  INSERT INTO snwd_ad VALUES i_addr.
+  E_ADDR_ID = lv_guid.
+
+
+ENDFUNCTION.

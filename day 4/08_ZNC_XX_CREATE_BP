@@ -1,0 +1,44 @@
+*"----------------------------------------------------------------------
+*"*"Local Interface:
+*"  IMPORTING
+*"     REFERENCE(I_BP) TYPE  SNWD_BPA
+*"     REFERENCE(I_ADDR) TYPE  SNWD_AD
+*"  EXPORTING
+*"     REFERENCE(E_BP_ID) TYPE  SNWD_NODE_KEY
+*"----------------------------------------------------------------------
+  data: lv_bp_id   type guid_32,
+        lv_addr_id type snwd_node_key,
+        ls_bpa     type snwd_bpa.
+
+  ls_bpa = i_bp.
+
+  call function 'ZNC_XX_CREATE_BP_ADDR'
+    exporting
+      i_addr    = i_addr              " EPM: Address Table
+    importing
+      e_addr_id = lv_addr_id.
+
+  call function 'GUID_CREATE'
+    importing
+      ev_guid_32 = lv_bp_id.                  " Guid of length 32 (CHAR Format) Uppper Case
+
+  ls_bpa-node_key = lv_bp_id.
+  ls_bpa-address_guid = lv_addr_id.
+  ls_bpa-created_by = sy-uname.
+
+  select max( bp_id ) from snwd_bpa into ls_bpa-bp_id .
+
+  ls_bpa-bp_id = ls_bpa-bp_id + 1.
+
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    exporting
+      input  = ls_bpa-bp_id                 " C-Feld
+    importing
+      output =  ls_bpa-bp_id                " interne Darstellung von INPUT, beliebiger Typ
+    .
+
+  get time stamp field ls_bpa-created_at.
+
+
+  insert into snwd_bpa values ls_bpa.
+  e_bp_id = lv_bp_id.

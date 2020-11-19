@@ -1,0 +1,66 @@
+
+**Call Divide function
+PARAMETERS: a type i, b type i.
+data: lv_result type i.
+
+
+call FUNCTION 'ZNC_XX_DIVIDE'
+  exporting
+    p1 = a
+    p2 = b
+  importing
+    p3 = lv_result
+  .
+
+WRITE : lv_result.
+
+
+*Calling read all bp by country
+
+*data: lt_bp type TABLE OF snwd_bpa.
+*
+*PARAMETERS: ctry type land1.
+*
+*call FUNCTION 'ZNC_XX_READ_BP_BY_CTRY'
+*  exporting
+*    i_country = ctry                 " Country Key
+*  importing
+*    et_bps    = lt_bp                 " Table Type for BPA
+*  .
+*
+*LOOP AT lt_bp INTO DATA(ls_bp).
+*  WRITE : / ls_bp-bp_id, ls_bp-company_name, ls_bp-legal_form.
+*ENDLOOP.
+
+
+*Create a new BP
+
+*data : ls_bp   type snwd_bpa,
+*       ls_addr type snwd_ad,
+*       lv_string type string,
+*       lv_bpid type snwd_bpa-node_key.
+*
+*ls_bp-company_name = 'Anubhav1'.
+*ls_bp-bp_role = '01'.
+*ls_bp-legal_form = 'USA'.
+*ls_bp-currency_code = 'USD'.
+*ls_bp-approval_status = 'A'.
+*
+*ls_bp-email_address = 'anubhav.abap1@gmail.com'.
+*ls_bp-web_address = 'anubhavtrainings1.com'.
+*
+*ls_addr-country = 'US'.
+*ls_addr-city = 'NYC'.
+*ls_addr-building = 'Building2'.
+*ls_addr-street = 'Jeorge Town Street'.
+*
+*call FUNCTION 'ZNC_XX_CREATE_BP'
+*  exporting
+*    i_bp    = ls_bp                 " EPM: Business Partners
+*    i_addr  = ls_addr                 " EPM: Address Table
+*  importing
+*    e_bp_id = lv_bpid                 " EPM: Generic Node Key
+*  .
+*
+*lv_string = |Your new BP assignment ID is { lv_bpid }|.
+*MESSAGE lv_string TYPE 'I'.

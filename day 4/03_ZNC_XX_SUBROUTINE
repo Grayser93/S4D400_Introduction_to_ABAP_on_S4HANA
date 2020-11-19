@@ -1,0 +1,104 @@
+"A subroutine is a reusable section of code. itab is like a mini-program that can be called from another point in your program. Within itab you can define variables, execute statements, compute results, and write output. To define a subroutine, use the f
+"orm
+"statement to indicate the start of a subroutine, and use endform to indicate the end of the subroutine. The name of a subroutine cannot exceed 30 characters.
+"Defining and Calling a Subroutine
+
+ write: / 'Before call 1'.
+ perform sub1.
+ write: / 'Before call 2'.
+ perform sub1.
+ write: / 'After calls'.
+
+ form sub1.
+   write: / 'Inside sub1'.
+ endform.
+
+
+
+"Passing Parameters to a Subroutine
+
+
+* data: f1 value 'A',
+*       f2 value 'B',
+*       f3 value 'C'.
+*
+* perform: s1 using f1 f2 f3,
+*          s2 using f1 f2 f3.
+*
+* form s1 using p1 p2 p3.
+*    write: / f1, f2, f3,
+*           / p1, p2, p3.
+* endform.
+*
+*form s2 using f1 f2 f3.
+*    skip.
+*    write: / f1, f2, f3.
+*endform.
+
+
+"Pass by value and by reference
+
+
+* data: f1 value 'A',
+*       f2 value 'B'.
+*
+* write: / f1, f2.
+* perform s1 using f1 f2.
+* write: / f1, f2.
+*
+*form s1 using p1
+*              value(p2).
+*    p1 = p2 = 'X'.
+*endform.
+
+
+"How to Pass an Internal Table Without a Header Line to a Subroutine
+
+
+" Here, an internal table that doesn't have a header line
+" is passed without creating a header line automatically
+
+* data: itab type table of snwd_bpa.         "doesn't have a header line
+*
+* select * up to 5 rows from snwd_bpa into table itab
+* order by bp_id.
+* perform: s1 using itab,
+*          s2 using itab,
+*         s3 using itab,
+*         writeitout .
+*
+* write: / 'At end'.
+* perform writeitout .
+*
+*form s1 using value(pt) like itab. "pass by value
+**                        you can also use: like itab[].
+*    data wa like line of pt.
+**    you can also use:
+**      data wa like znc_xx_bpa.
+**      data wa like line of pt[].
+**      local znc_xx_bpa.             "if you use this, the work area name
+**                                 "will be znc_xx_bpa, not wa
+*    read table pt into wa index 1.
+*    wa-bp_id = 'XXX'.
+*    modify pt from wa index 1.
+*    endform.
+*
+*form s2 using pt like itab. "pass by reference
+*    data wa like line of pt.
+*    read table pt into wa index 2.
+*    wa-bp_id = 'YYY'.
+*    modify pt from wa index 2.
+*    endform.
+*
+*form s3 changing value(pt) like itab. "pass by value and result
+*    data wa like line of pt.
+*    read table pt into wa index 3.
+*    wa-bp_id = 'ZZZ'.
+*    modify pt from wa index 3.
+*endform.
+*
+*form writeitout .
+*    loop at itab into data(wa).
+*        write : / wa-bp_id.
+*    endloop.
+*endform.

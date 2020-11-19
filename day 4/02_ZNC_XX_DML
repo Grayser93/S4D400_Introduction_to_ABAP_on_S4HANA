@@ -16,10 +16,20 @@ ls_bp-legal_form = 'USA'.
 ls_bp-web_address = 'anubhavtrainings.com'.
 ls_bp-email_address = 'anubhav.abap@gmail.com'.
 ls_bp-phone_number = '918810504396'.
+
 call function 'GUID_CREATE'
   IMPORTING
     ev_guid_32 = lv_gen_key
   .
+
+
+CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+  exporting
+    input  = ls_bp-bp_id                 " C-Feld
+  importing
+    output =  ls_bp-bp_id                " interne Darstellung von INPUT, beliebiger Typ
+  .
+
 ls_bp-node_key = lv_gen_key.
 INSERT into snwd_bpa values ls_bp.
 
