@@ -1,0 +1,70 @@
+class ZCL_XX_PLANE definition
+  public
+  create public .
+
+public section.
+
+  data HEIGHT type I .
+  data WIDTH type I .
+
+  methods GET_ENGINE
+    exporting
+      !E_ENGINE type I .
+  methods SET_ENGINE
+    importing
+      !I_ENGINE type I .
+protected section.
+
+  data AIRCRAFT_TYPE type CHAR10 .
+
+  methods START_ENGINE .
+private section.
+
+  data NO_OF_ENGINES type I .
+
+  methods FLY .
+ENDCLASS.
+
+
+
+CLASS ZCL_XX_PLANE IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_XX_PLANE->FLY
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method FLY.
+     WRITE : / 'we are in the sky Roger!!'.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PLANE->GET_ENGINE
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] E_ENGINE                       TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method GET_ENGINE.
+    e_engine = me->no_of_engines.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PLANE->SET_ENGINE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_ENGINE                       TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method SET_ENGINE.
+    me->no_of_engines = i_engine.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Protected Method ZCL_XX_PLANE->START_ENGINE
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method START_ENGINE.
+    WRITE : / 'Engines are starring, Medday'.
+    WRITE : / 'No of engines started ', me->no_of_engines.
+  endmethod.
+ENDCLASS.

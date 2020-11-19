@@ -1,4 +1,3 @@
-FUNCTION znc_xx_create_bp_addr.
 *"----------------------------------------------------------------------
 *"*"Local Interface:
 *"  IMPORTING
@@ -20,6 +19,3 @@ FUNCTION znc_xx_create_bp_addr.
 
   INSERT INTO snwd_ad VALUES i_addr.
   E_ADDR_ID = lv_guid.
-
-
-ENDFUNCTION.

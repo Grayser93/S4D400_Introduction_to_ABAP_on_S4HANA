@@ -1,0 +1,32 @@
+public section.
+
+  data NO_OF_SEATS type I .
+
+  methods SET_SEATS
+    importing
+      !I_SEATS type I .
+  methods GET_SEATS
+    exporting
+      !E_SEATS type I .
+
+
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PASS_PLANE->GET_SEATS
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] E_SEATS                        TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method GET_SEATS.
+    e_seats = me->no_of_seats.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PASS_PLANE->SET_SEATS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_SEATS                        TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method SET_SEATS.
+    me->no_of_seats = i_seats.
+  endmethod.

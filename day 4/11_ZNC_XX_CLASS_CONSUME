@@ -1,0 +1,36 @@
+
+data: lo_plane type REF TO zcl_xx_plane.
+
+create OBJECT lo_plane.
+
+lo_plane->set_engine( i_engine = 2 ).
+lo_plane->get_engine( ).
+lo_plane->fly( ).
+
+
+data: lo_pass_plane type REF TO zcl_xx_pass_plane,
+      lo_cargo_plane type REF TO zcl_xx_cargo_plane,
+      lv_seats type i,
+      lv_cargo TYPE i.
+
+create OBJECT lo_pass_plane.
+create OBJECT lo_cargo_plane.
+
+lo_pass_plane->set_seats( i_seats = 20 ).
+lo_pass_plane->get_seats(
+  importing
+    e_seats = lv_seats
+).
+
+WRITE : / lv_seats.
+lo_pass_plane->fly( ).
+
+
+lo_cargo_plane->set_cargo( i_cargo_space = 255 ).
+lo_cargo_plane->get_cargo(
+  importing
+    e_cargo_space = lv_cargo
+).
+
+WRITE : / lv_cargo.
+lo_cargo_plane->fly( ).

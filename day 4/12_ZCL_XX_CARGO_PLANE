@@ -1,0 +1,32 @@
+public section.
+
+  data CARGO_SPACE type I .
+
+  methods SET_CARGO
+    importing
+      !I_CARGO_SPACE type I .
+  methods GET_CARGO
+    exporting
+      !E_CARGO_SPACE type I .
+
+
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PASS_CARGO->GET_CARGO
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] E_CARGO_SPACE                  TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method GET_CARGO.
+    e_CARGO_SPACE = me->CARGO_SPACE.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_XX_PASS_CARGO->SET_CARGO
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_CARGO_SPACE                  TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method SET_CARGO.
+    me->cargo_space = i_cargo_space.
+  endmethod.
