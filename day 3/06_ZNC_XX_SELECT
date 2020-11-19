@@ -1,21 +1,32 @@
-
 * Part 1 : This Program Reads Rows from a Database Table Directly into an Internal Table
 
 
-* tables snwd_ad.
-* data itab like snwd_ad occurs 23 with header line.
+*tables snwd_ad.
+*"data itab like snwd_ad occurs 23 with header line.
+*data itab type table of snwd_ad.
 *
-* select * from snwd_ad into table itab.   "don't code an endselect
-* loop at itab.
-*     write: / itab-city, itab-country.
-*     endloop.
+*select * from snwd_ad into table itab.   "don't code an endselect
+*
+*loop at itab into data(wa).
+*  write: / wa-city, wa-country.
+*endloop.
 *
 *select * from snwd_ad into table itab
 *    where country between 'DE' and 'US'.
 *skip.
-*loop at itab.
-*    write: / itab-city, itab-country.
-*    endloop.
+*loop at itab into wa.
+*  write: / wa-city, wa-country.
+*endloop.
+*
+*call function 'GUI_DOWNLOAD'
+*  exporting
+*    filename              = 'c:\temp\s4d400_new.xls'
+*    write_field_separator = 'X'
+*  tables
+*    data_tab              = itab.
+*
+*
+*
 *free itab.
 
 
@@ -24,20 +35,25 @@
 
 * tables znc_xx_bpa.
 * data               begin of itab occurs 2.
-* include structure      znc_xx_bpa.
+*                    include structure      znc_xx_bpa.
 * data:                  social_sec_code type p,
-*                        end of itab.
+*                    end of itab.
 *
-* select * from snwd_bpa into table itab where company_name = 'SAP'.
-* loop at itab.
-*    write: / itab-bp_id, itab-company_name, itab-email_address, itab-approval_status.
-*    endloop.
+*select * from snwd_bpa into CORRESPONDING FIELDS OF TABLE itab where company_name = 'SAP'.
+*loop at itab ASSIGNING FIELD-SYMBOL(<fs>).
+*    <fs>-social_sec_code = '89888'.
+*    write: / <fs>-bp_id, <fs>-company_name, <fs>-email_address, <fs>-approval_status.
+*endloop.
 *
 *skip.
-*select bp_id company_name email_address from snwd_bpa into table itab where company_name = 'Tapla'.
-*loop at itab.
-*    write: / itab-bp_id, itab-company_name, itab-email_address.
-*    endloop.
+*select bp_id company_name email_address from snwd_bpa into
+*   CORRESPONDING FIELDS OF
+*   table itab where company_name = 'AVANTEL'.
+*
+*loop at itab ASSIGNING <fs>.
+*    write: / <fs>-bp_id, <fs>-company_name, <fs>-email_address.
+*endloop.
+*
 *free itab.
 
 "Solution to use INTO CORRESPONDING FIELDS OF
@@ -49,7 +65,8 @@
 *skip.
 
 
-* Part 3 : Your Program Will Produce a Syntax Error If You Try to Put More Fields into an Internal Table than Exist in That Table
+* Part 3 : Your Program Will Produce a Syntax Error If You Try to Put More Fields into an Internal Table
+*          than Exist in That Table
 
 
 * tables znc_xx_bpa.
@@ -113,21 +130,28 @@
 
 * Part 5 : Using Inline data declaration to create internal table automatically
 *select company_name, bp_role
-* from snwd_bpa into table @data(itab).
+* from snwd_bpa into table @data(itab).  ""escape char  "snwd_bpa is our DB Table
+*                                        "itab will be our internal table where data will come INTO
 *
 *loop at itab into data(wa).
 *    write: / wa-company_name, wa-bp_role.
 *endloop.
 
 * Part 6 : Using Select Single Record
-*select single company_name, bp_role
-* from snwd_bpa into  @data(wa) where bp_id = '0100000009'.
+*  select single company_name, bp_role                        "non-loop example where we read single record
+*   from snwd_bpa into @data(fs) where bp_id = '0100000009'. "to hold single record enough to use the field string
 *
-*write: / wa-company_name, wa-bp_role.
+*  write: / fs-company_name, fs-bp_role.
 
 
 * Part 7 : Using Select....EndSelect with inline data declaration
-*select company_name, bp_role
-* from snwd_bpa into @data(wa).
-*    write: / wa-company_name, wa-bp_role.
-*endselect.
+  select company_name, bp_role            "loop over all the records until its finished
+   from snwd_bpa into @data(spiderman).          "ever loop pass pick one record and keep in work area
+      write: / spiderman-company_name, spiderman-bp_role.
+  endselect.
+
+*Read data of your employee table and print on screen
+  select empid, empname, city from znc_emp_00 into @data(superman).
+
+    WRITE : / superman-empid, superman-empname, superman-city.
+  ENDSELECT.
