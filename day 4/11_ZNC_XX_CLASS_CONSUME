@@ -1,12 +1,24 @@
+*Step 1: Defining an Object of our class
+data: lo_plane type REF TO zcl_00_plane,
+      lo_plane_balu type REF TO zcl_00_plane.
 
-data: lo_plane type REF TO zcl_xx_plane.
 
-create OBJECT lo_plane.
+*Step 2: Create memory for the object
+create OBJECT : lo_plane, lo_plane_balu.
 
+*Step 3: Set the no. of engines the plane have
 lo_plane->set_engine( i_engine = 2 ).
-lo_plane->get_engine( ).
+*Call methods
+lo_plane->start_engine( ).
 lo_plane->fly( ).
 
+*Step 4: Set the no. engine
+lo_plane_balu->set_engine( i_engine = 3 ).
+lo_plane_balu->start_engine( ).
+lo_plane_balu->fly( ).
+
+
+**BELOW CODE DO NOT USE COMMENT
 
 data: lo_pass_plane type REF TO zcl_xx_pass_plane,
       lo_cargo_plane type REF TO zcl_xx_cargo_plane,
