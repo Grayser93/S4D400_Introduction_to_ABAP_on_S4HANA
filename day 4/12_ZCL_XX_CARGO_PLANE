@@ -1,32 +1,74 @@
-public section.
+class ZCL_00_CARGO_PLANE definition
+  public
+  inheriting from ZCL_00_PLANE
+  final
+  create public .
 
-  data CARGO_SPACE type I .
+public section.
 
   methods SET_CARGO
     importing
-      !I_CARGO_SPACE type I .
+      !I_CARGO type INT4 .
   methods GET_CARGO
     exporting
-      !E_CARGO_SPACE type I .
+      !E_CARGO type INT4 .
+
+  methods ZIF_00_PLANE~LOAD
+    redefinition .
+  methods ZIF_00_PLANE~SET_INFECTED
+    redefinition .
+protected section.
+private section.
+
+  data CARGO_SPACE type INT4 .
+ENDCLASS.
 
 
+
+CLASS ZCL_00_CARGO_PLANE IMPLEMENTATION.
 
 
 * <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_XX_PASS_CARGO->GET_CARGO
+* | Instance Public Method ZCL_00_CARGO_PLANE->GET_CARGO
 * +-------------------------------------------------------------------------------------------------+
-* | [<---] E_CARGO_SPACE                  TYPE        I
+* | [<---] E_CARGO                        TYPE        INT4
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_CARGO.
-    e_CARGO_SPACE = me->CARGO_SPACE.
+
+    e_cargo = me->cargo_space.
+
   endmethod.
 
 
 * <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_XX_PASS_CARGO->SET_CARGO
+* | Instance Public Method ZCL_00_CARGO_PLANE->SET_CARGO
 * +-------------------------------------------------------------------------------------------------+
-* | [--->] I_CARGO_SPACE                  TYPE        I
+* | [--->] I_CARGO                        TYPE        INT4
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_CARGO.
-    me->cargo_space = i_cargo_space.
+
+    me->cargo_space = i_cargo.
+
   endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_00_CARGO_PLANE->ZIF_00_PLANE~LOAD
+* +-------------------------------------------------------------------------------------------------+
+* | [!CX!] ZCX_00_CORONA
+* | [!CX!] ZCX_07_CORONA
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method ZIF_00_PLANE~LOAD.
+    WRITE : / 'Cargo Freight is getting loaded'.
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_00_CARGO_PLANE->ZIF_00_PLANE~SET_INFECTED
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method ZIF_00_PLANE~SET_INFECTED.
+*CALL METHOD SUPER->ZIF_00_PLANE~SET_INFECTED
+*    .
+  endmethod.
+ENDCLASS.

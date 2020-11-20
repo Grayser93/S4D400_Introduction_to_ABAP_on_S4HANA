@@ -1,0 +1,44 @@
+class ZCL_00_FACTORY definition
+  public
+  final
+  create public .
+
+public section.
+
+  class-methods GET_INSTANCE
+    importing
+      !I_PTYPE type CHAR1
+    exporting
+      !EO_PLANE type ref to ZIF_00_PLANE .
+protected section.
+private section.
+ENDCLASS.
+
+
+
+CLASS ZCL_00_FACTORY IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method ZCL_00_FACTORY=>GET_INSTANCE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_PTYPE                        TYPE        CHAR1
+* | [<---] EO_PLANE                       TYPE REF TO ZIF_00_PLANE
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method get_instance.
+
+    data: lo_pass_plane  type ref to zcl_00_pass_plane,
+          lo_cargo_plane type ref to zcl_00_cargo_plane.
+
+    if i_ptype = 'P'.
+      create object : lo_pass_plane.
+      eo_plane = lo_pass_plane.
+    elseif i_ptype = 'C'.
+      create object : lo_cargo_plane.
+      eo_plane = lo_cargo_plane. ""child object to parent - widening cast
+    else.
+      message 'plane not supported' type 'E'.
+    endif.
+
+  endmethod.
+ENDCLASS.

@@ -1,32 +1,84 @@
+class ZCL_00_PASS_PLANE definition
+  public
+  inheriting from ZCL_00_PLANE
+  final
+  create public .
+
 public section.
 
-  data NO_OF_SEATS type I .
+  data HAS_CORONA_POSITIVE type FLAG .
 
   methods SET_SEATS
     importing
-      !I_SEATS type I .
+      !I_SEATS type INT4 .
   methods GET_SEATS
     exporting
-      !E_SEATS type I .
+      !E_SEATS type INT4 .
+
+  methods ZIF_00_PLANE~LOAD
+    redefinition .
+  methods ZIF_00_PLANE~SET_INFECTED
+    redefinition .
+protected section.
+private section.
+
+  data NO_OF_SEATS type INT4 .
+ENDCLASS.
 
 
+
+CLASS ZCL_00_PASS_PLANE IMPLEMENTATION.
 
 
 * <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_XX_PASS_PLANE->GET_SEATS
+* | Instance Public Method ZCL_00_PASS_PLANE->GET_SEATS
 * +-------------------------------------------------------------------------------------------------+
-* | [<---] E_SEATS                        TYPE        I
+* | [<---] E_SEATS                        TYPE        INT4
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   method GET_SEATS.
+
     e_seats = me->no_of_seats.
+
   endmethod.
 
 
 * <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_XX_PASS_PLANE->SET_SEATS
+* | Instance Public Method ZCL_00_PASS_PLANE->SET_SEATS
 * +-------------------------------------------------------------------------------------------------+
-* | [--->] I_SEATS                        TYPE        I
+* | [--->] I_SEATS                        TYPE        INT4
 * +--------------------------------------------------------------------------------------</SIGNATURE>
   method SET_SEATS.
+
     me->no_of_seats = i_seats.
+
   endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_00_PASS_PLANE->ZIF_00_PLANE~LOAD
+* +-------------------------------------------------------------------------------------------------+
+* | [!CX!] ZCX_00_CORONA
+* | [!CX!] ZCX_07_CORONA
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method ZIF_00_PLANE~LOAD.
+
+    IF me->has_corona_positive = 'X'.
+      "Throw an exception
+      RAISE EXCEPTION TYPE ZCX_00_CORONA.
+    ENDIF.
+
+    WRITE : / 'Passengers are boarding'.
+
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_00_PASS_PLANE->ZIF_00_PLANE~SET_INFECTED
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method ZIF_00_PLANE~SET_INFECTED.
+
+    me->has_corona_positive = 'X'.
+
+  endmethod.
+ENDCLASS.

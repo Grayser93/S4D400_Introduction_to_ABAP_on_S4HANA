@@ -1,48 +1,73 @@
-*Step 1: Defining an Object of our class
-data: lo_plane type REF TO zcl_00_plane,
-      lo_plane_balu type REF TO zcl_00_plane.
+*&---------------------------------------------------------------------*
+*& Report ZNC_00_CALL_CLASS
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report znc_00_call_class.
 
+data: lo_if_plane      type ref to zif_00_plane.
+data: lo_if_plane_C    type ref to zif_00_plane.
 
-*Step 2: Create memory for the object
-create OBJECT : lo_plane, lo_plane_balu.
+PARAMETERS ptyp type c.
 
-*Step 3: Set the no. of engines the plane have
-lo_plane->set_engine( i_engine = 2 ).
-*Call methods
-lo_plane->start_engine( ).
-lo_plane->fly( ).
-
-*Step 4: Set the no. engine
-lo_plane_balu->set_engine( i_engine = 3 ).
-lo_plane_balu->start_engine( ).
-lo_plane_balu->fly( ).
-
-
-**BELOW CODE DO NOT USE COMMENT
-
-data: lo_pass_plane type REF TO zcl_xx_pass_plane,
-      lo_cargo_plane type REF TO zcl_xx_cargo_plane,
-      lv_seats type i,
-      lv_cargo TYPE i.
-
-create OBJECT lo_pass_plane.
-create OBJECT lo_cargo_plane.
-
-lo_pass_plane->set_seats( i_seats = 20 ).
-lo_pass_plane->get_seats(
+ZCL_00_FACTORY=>get_instance(
+  exporting
+    i_ptype  = ptyp                 " Single-Character Flag
   importing
-    e_seats = lv_seats
+    eo_plane = lo_if_plane                 " Airplane Interface
 ).
 
-WRITE : / lv_seats.
-lo_pass_plane->fly( ).
-
-
-lo_cargo_plane->set_cargo( i_cargo_space = 255 ).
-lo_cargo_plane->get_cargo(
+ZCL_00_FACTORY=>get_instance(
+  exporting
+    i_ptype  = ptyp                 " Single-Character Flag
   importing
-    e_cargo_space = lv_cargo
+    eo_plane = lo_if_plane_C                 " Airplane Interface
 ).
 
-WRITE : / lv_cargo.
-lo_cargo_plane->fly( ).
+
+""Interface is a contract which all the child classes will abide to
+
+TRY .
+    lo_if_plane->load( ). "runtime it will decide depending on the object assigned
+                          "which actual load to call - RUNTIME POLYMORPHISM
+    lo_if_plane->fly( ).
+CATCH ZCX_00_CORONA.
+
+ENDTRY.
+
+
+lo_if_plane_C->set_infected( ).
+
+TRY .
+  lo_if_plane_C->load( ).
+  lo_if_plane_C->fly( ).
+CATCH  ZCX_00_CORONA.
+  WRITE : / 'The fight was terminated as corona +ve found'.
+ENDTRY.
+
+
+
+*lo_pass_plane->set_seats( i_seats = 29  ).
+*lo_pass_plane->fly( ).
+*
+*lo_cargo_plane->set_cargo( i_cargo = 290 ).
+*lo_cargo_plane->fly( ).
+
+**Step 1: Defining an Object of our class
+*data: lo_plane type REF TO zcl_00_plane,
+*      lo_plane_balu type REF TO zcl_00_plane.
+*
+*
+**Step 2: Create memory for the object
+*create OBJECT : lo_plane, lo_plane_balu.
+*
+**Step 3: Set the no. of engines the plane have
+*lo_plane->set_engine( i_engine = 2 ).
+**Call methods
+*lo_plane->start_engine( ).
+*lo_plane->fly( ).
+*
+**Step 4: Set the no. engine
+*lo_plane_balu->set_engine( i_engine = 3 ).
+*lo_plane_balu->start_engine( ).
+*lo_plane_balu->fly( ).
